@@ -1,9 +1,12 @@
-const path = require('path');
+// webpack.config.prod.js
+import path from 'path';
+import { fileURLToPath } from 'url';
 
-module.exports = {
-  entry: {
-    app: './js/app.js',
-  },
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+export default {
+  entry: './js/app.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     clean: true,
