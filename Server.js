@@ -12,7 +12,7 @@ app.use(BodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
 
 
-const port = 3000;
+const port = process.env.PORT || 3000;
 /*
 const db = new pg.Client({
     user: process.env.DB_user,
