@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TinyLink Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100">
+
+<!-- Header -->
+<header class="bg-white shadow p-4 mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">TinyLink Dashboard</h1>
+</header>
+
+<div class="max-w-5xl mx-auto bg-white p-6 rounded shadow">
+
+    <!-- Add New Link -->
+    <h2 class="text-xl font-semibold mb-3">Add New Link</h2>
+
+    <form action="/api/links" method="POST" class="space-y-4 mb-8">
+
+        <div>
+            <label class="block font-medium">Long URL</label>
+            <input type="text" name="url"
+                   class="w-full border p-2 rounded"
+                   placeholder="https://example.com/very/long/url"
+                   required>
+        </div>
+
+        <div>
+            <label class="block font-medium">Custom Code (Optional)</label>
+            <input type="text" name="code"
+                   class="w-full border p-2 rounded"
+                   placeholder="e.g., docs">
+        </div>
+
+        <button class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+            Create Short Link
+        </button>
+    </form>
+
+    <hr class="my-6">
+
+    <!-- Table -->
+    <h2 class="text-xl font-semibold mb-3">Your Links</h2>
+
+    <table class="w-full border-collapse">
+        <thead>
+        <tr class="bg-gray-200 text-left">
+            <th class="p-2 border">Short Code</th>
+            <th class="p-2 border">Target URL</th>
+            <th class="p-2 border">Clicks</th>
+            <th class="p-2 border">Last Clicked</th>
+            <th class="p-2 border">Action</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <% if (links.length === 0) { %>
+            <tr>
+                <td colspan="5" class="text-center p-4 text-gray-500">
+                    No links yet. Add one above!
+                </td>
+            </tr>
+        <% } %>
+
+        <% links.forEach(link => { %>
+            <tr class="hover:bg-gray-50">
+                <td class="p-2 border">
+                    <a href="/<%= link.code %>" class="text-blue-600 underline">
+                        <%= link.code %>
+                    </a>
+                </td>
+
+                <td class="p-2 border truncate max-w-xs">
+                    <a href="<%= link.url %>" target="_blank" class="text-gray-700">
+                        <%= link.url %>
+                    </a>
+                </td>
+
+                <td class="p-2 border"><%= link.total_clicks %></td>
+
+                <td class="p-2 border"><%= link.last_clicked || "Never" %></td>
+
+                <td class="p-2 border">
+                    <form action="/api/links/<%= link.code %>" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+
+                        <button type="submit"  class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        <% }) %>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>
